@@ -3,13 +3,14 @@
 
 SRCDIR = src
 BUILDDIR = build
+OSNAME = dekoos
 
 vpath %.asm $(SRCDIR)
 vpath %.rs $(SRCDIR)
 
 TARGET=haribote.img
 
-.PHONY: run clean install build
+.PHONY: run clean install build init
 
 install:
 	docker-compose up
@@ -33,8 +34,15 @@ $(BUILDDIR)/%.bin: %.asm
 	nasm $< -o $@ -l $(BUILDDIR)/$*.lst
 
 run: install
-	qemu-system-i386 -drive format=raw,file=$(TARGET),index=0,if=floppy
+	VBoxManage unregistervm $(OSNAME) --delete
+	VBoxManage createvm --name $(OSNAME) --ostype Other --register
+	VBoxManage modifyvm  $(OSNAME) --ostype Other --memory 32
+	VBoxManage storagectl $(OSNAME) --name Floppy --add floppy
+	VBoxManage storageattach $(OSNAME) --storagectl Floppy --device 0 --medium $(TARGET)
+	VBoxManage startvm $(OSNAME)
 
 clean:
 	$(RM) $(TARGET)
 	$(RM) -r $(BUILDDIR)
+
+
