@@ -13,7 +13,7 @@ TARGET=haribote.img
 .PHONY: run clean install build init
 
 install:
-	docker-compose up
+	docker-compose up --exit-code-from haribote-rust
 
 build:
 	@mkdir -p $(BUILDDIR)
