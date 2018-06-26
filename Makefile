@@ -7,6 +7,7 @@ OSNAME = dekoos
 
 vpath %.asm $(SRCDIR)
 vpath %.rs $(SRCDIR)
+vpath %.o $(BUILDDIR)
 
 TARGET=haribote.img
 
@@ -26,9 +27,14 @@ $(TARGET): $(BUILDDIR)/ipl10.bin $(BUILDDIR)/haribote.sys
 $(BUILDDIR)/haribote.sys: $(BUILDDIR)/asmhead.bin $(BUILDDIR)/bootpack.bin
 	cat $^ > $@
 
-$(BUILDDIR)/%.bin: %.rs
-	rustc --target=i686-unknown-linux-gnu --crate-type=staticlib --emit=obj -C lto -C no-prepopulate-passes -Z verbose -Z no-landing-pads -o $(BUILDDIR)/$*.o $<
-	i686-unknown-linux-gnu-ld -v -nostdlib -Tdata=0x00310000 $(BUILDDIR)/$*.o -T $(SRCDIR)/kernel.ld -o $@
+$(BUILDDIR)/osfunc.o: osfunc.asm
+	nasm -f elf32 $(SRCDIR)/osfunc.asm -o $(BUILDDIR)/osfunc.o -l $(BUILDDIR)/osfunc.lst
+
+$(BUILDDIR)/bootpack.o: bootpack.rs
+	rustc --target=i686-unknown-linux-gnu --crate-type=staticlib --emit=obj -C lto -C no-prepopulate-passes -C relocation-model=static -Z verbose -Z no-landing-pads -o $(BUILDDIR)/bootpack.o $<
+
+$(BUILDDIR)/bootpack.bin: bootpack.o osfunc.o
+	i686-unknown-linux-gnu-ld -v -nostdlib -Tdata=0x00310000 $(BUILDDIR)/bootpack.o $(BUILDDIR)/osfunc.o -T $(SRCDIR)/kernel.ld -o $@
 
 $(BUILDDIR)/%.bin: %.asm
 	nasm $< -o $@ -l $(BUILDDIR)/$*.lst
