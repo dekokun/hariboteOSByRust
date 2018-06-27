@@ -15,8 +15,10 @@ extern "C" {
 #[start]
 pub fn hari_main() {
     for i in 0xa0000..0xaffff {
+        let vram: *mut i32 = i as *mut i32;
         unsafe {
-            _write_mem8(i, i & 0x0f);
+            // _write_mem8(i, i & 0x0f);
+            *vram = i & 0x0f;
         }
     }
     unsafe {
