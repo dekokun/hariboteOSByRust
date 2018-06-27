@@ -16,7 +16,7 @@ extern "C" {
 pub fn hari_main() {
     for i in 0xa0000..0xaffff {
         unsafe {
-            _write_mem8(i, 15);
+            _write_mem8(i, i & 0x0f);
         }
     }
     unsafe {
