@@ -8,11 +8,17 @@ use core::panic::PanicInfo;
 extern "C" {
     #[cfg(any(target_arch = "x86"))]
     pub fn _io_hlt();
+    pub fn _write_mem8(i:i32, j:i32);
 }
 
 #[no_mangle]
 #[start]
 pub fn hari_main() {
+    for i in 0xa0000..0xaffff {
+        unsafe {
+            _write_mem8(i, 15);
+        }
+    }
     unsafe {
         _io_hlt();
     }

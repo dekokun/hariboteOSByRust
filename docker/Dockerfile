@@ -55,6 +55,9 @@ FROM rust:1.25.0
     # rustのデフォルトツールチェインとクロスコンパイル環境の設定
     RUN rustup default nightly && \
     	rustup target add i686-unknown-linux-gnu
+    RUN cargo install xargo
+    RUN rustup component add rust-src
+
 
     # 設定ファイルをイメージ内にコピー
     COPY --chown=developer:developer ["./.bashrc", "/home/developer/.bashrc"]

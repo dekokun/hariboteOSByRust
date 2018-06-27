@@ -30,11 +30,11 @@ $(BUILDDIR)/haribote.sys: $(BUILDDIR)/asmhead.bin $(BUILDDIR)/bootpack.bin
 $(BUILDDIR)/osfunc.o: osfunc.asm
 	nasm -f elf32 $(SRCDIR)/osfunc.asm -o $(BUILDDIR)/osfunc.o -l $(BUILDDIR)/osfunc.lst
 
-$(BUILDDIR)/bootpack.o: bootpack.rs
-	rustc --target=i686-unknown-linux-gnu --crate-type=staticlib --emit=obj -C lto -C no-prepopulate-passes -C relocation-model=static -Z verbose -Z no-landing-pads -o $(BUILDDIR)/bootpack.o $<
+target/i686-unknown-linux-gnu/debug/libdekoos.a: bootpack.rs Makefile
+	RUSTFLAGS='-C relocation-model=dynamic-no-pic' RUST_TARGET_PATH=$(PWD) rustup run nightly `which xargo` build -v --target=i686-unknown-linux-gnu --manifest-path Cargo.toml
 
-$(BUILDDIR)/bootpack.bin: bootpack.o osfunc.o
-	i686-unknown-linux-gnu-ld -v -nostdlib -Tdata=0x00310000 $(BUILDDIR)/bootpack.o $(BUILDDIR)/osfunc.o -T $(SRCDIR)/kernel.ld -o $@
+$(BUILDDIR)/bootpack.bin: bootpack.o target/i686-unknown-linux-gnu/debug/libdekoos.a
+	i686-unknown-linux-gnu-ld -v -nostdlib -Tdata=0x00310000 target/i686-unknown-linux-gnu/debug/libdekoos.a $(BUILDDIR)/osfunc.o -T $(SRCDIR)/kernel.ld -o $@
 
 $(BUILDDIR)/%.bin: %.asm
 	nasm $< -o $@ -l $(BUILDDIR)/$*.lst
