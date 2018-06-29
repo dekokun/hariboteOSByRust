@@ -27,13 +27,13 @@ $(TARGET): $(BUILDDIR)/ipl10.bin $(BUILDDIR)/haribote.sys
 $(BUILDDIR)/haribote.sys: $(BUILDDIR)/asmhead.bin $(BUILDDIR)/bootpack.bin
 	cat $^ > $@
 
-$(BUILDDIR)/osfunc.o: osfunc.asm
+$(BUILDDIR)/osfunc.o: osfunc.asm Makefile
 	nasm -f elf32 $(SRCDIR)/osfunc.asm -o $(BUILDDIR)/osfunc.o -l $(BUILDDIR)/osfunc.lst
 
 target/i686-unknown-linux-gnu/debug/libdekoos.a: bootpack.rs Makefile
 	RUSTFLAGS='-C relocation-model=dynamic-no-pic' RUST_TARGET_PATH=$(PWD) rustup run nightly `which xargo` build -v --target=i686-unknown-linux-gnu --manifest-path Cargo.toml
 
-$(BUILDDIR)/bootpack.bin: bootpack.o target/i686-unknown-linux-gnu/debug/libdekoos.a
+$(BUILDDIR)/bootpack.bin: target/i686-unknown-linux-gnu/debug/libdekoos.a osfunc.o
 	i686-unknown-linux-gnu-ld -v -nostdlib -Tdata=0x00310000 target/i686-unknown-linux-gnu/debug/libdekoos.a $(BUILDDIR)/osfunc.o -T $(SRCDIR)/kernel.ld -o $@
 
 $(BUILDDIR)/%.bin: %.asm
