@@ -48,17 +48,11 @@ fn init_palette() {
         0x00, 0x84, 0x84,   /* 14:暗い水色 */
         0x84, 0x84, 0x84    /* 15:暗い灰色 */
     ];
-    let start = 0;
-    let end = 15;
     unsafe {
         let eflags = _io_load_eflags();
-        _io_out8(0x03c8, start as u16);
-        let mut i = 0;
-        for _ in start..end {
-            _io_out8(0x03c9, rgb[0 + i] / 4);
-            _io_out8(0x03c9, rgb[1 + i] / 4);
-            _io_out8(0x03c9, rgb[2 + i] / 4);
-            i += 3;
+        _io_out8(0x03c8, (rgb.len() - 1) as u16);
+        for i in 0..rgb.len() - 1 {
+            _io_out8(0x03c9, rgb[i % 3] / 4);
         }
         _io_store_eflags(eflags);    /* 割り込み許可フラグを元に戻す */
     }
