@@ -7,8 +7,8 @@ use core::panic::PanicInfo;
 
 extern "C" {
     #[cfg(any(target_arch = "x86"))]
-    fn _io_hlt();
     fn _io_cli();
+    fn _io_hlt();
     fn _io_out8(i: u32, i: u16);
     fn _io_load_eflags() -> u32;
     fn _io_store_eflags(i: u32);
