@@ -34,8 +34,8 @@ fn boxfill(xsize: i32, c: u8, x0: i32, y0: i32, x1: i32, y1: i32) {
     let vram_start = 0xa0000;
     for y in y0..y1 {
         for x in x0..x1 {
-                let offset = y * xsize + x;
-                let vram = (vram_start + offset) as *mut u8;
+            let offset = y * xsize + x;
+            let vram = (vram_start + offset) as *mut u8;
             unsafe {
                 *vram = c;
             }
