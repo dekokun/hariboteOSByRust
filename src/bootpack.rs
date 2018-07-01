@@ -24,8 +24,22 @@ pub fn hari_main() {
             *vram = i & 0x0f;
         }
     }
+    boxfill(320, 10, 20, 20, 120, 120);
     unsafe {
         _io_hlt();
+    }
+}
+
+fn boxfill(xsize: i32, c: u8, x0: i32, y0: i32, x1: i32, y1: i32) {
+    let vram_start = 0xa0000;
+    for y in y0..y1 {
+        for x in x0..x1 {
+            unsafe {
+                let offset = y * xsize + x;
+                let vram = (vram_start + offset) as *mut u8;
+                *vram = c;
+            }
+        }
     }
 }
 
