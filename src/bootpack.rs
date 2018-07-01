@@ -82,9 +82,9 @@ fn init_palette() {
     ];
     unsafe {
         let eflags = _io_load_eflags();
-        _io_out8(0x03c8, (rgb.len() - 1) as u16);
+        _io_out8(0x03c8, 0);
         for i in 0..rgb.len() - 1 {
-            _io_out8(0x03c9, rgb[i % 3] / 4);
+            _io_out8(0x03c9, rgb[i] / 4);
         }
         _io_store_eflags(eflags); /* 割り込み許可フラグを元に戻す */
     }
