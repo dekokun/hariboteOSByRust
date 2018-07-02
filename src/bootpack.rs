@@ -24,23 +24,43 @@ pub fn hari_main() {
             *vram = i & 0x0f;
         }
     }
-    boxfill(320, 10, 20, 20, 120, 120);
+    boxfill(320, Color::DarkGreen, 20, 20, 120, 120);
     unsafe {
         _io_hlt();
     }
 }
 
-fn boxfill(xsize: i32, c: u8, x0: i32, y0: i32, x1: i32, y1: i32) {
+fn boxfill(xsize: i32, c: Color, x0: i32, y0: i32, x1: i32, y1: i32) {
     let vram_start = 0xa0000;
     for y in y0..y1 {
         for x in x0..x1 {
             let offset = y * xsize + x;
             let vram = (vram_start + offset) as *mut u8;
             unsafe {
-                *vram = c;
+                *vram = c as u8;
             }
         }
     }
+}
+
+#[derive(Clone, Copy)]
+enum Color {
+    Black = 0,
+    LightRed = 1,
+    LightGreen = 2,
+    LightYellow = 3,
+    LightBlue = 4,
+    LightPurple = 5,
+    LightLightBlue =6,
+    White = 7,
+    LightGray = 8,
+    DarkRed = 9,
+    DarkGreen = 10,
+    DarkYellow = 11,
+    DarkBlue = 12,
+    DarkPurple = 13,
+    DarkLightBlue = 14,
+    DarkGray = 15
 }
 
 fn init_palette() {
