@@ -18,7 +18,7 @@ extern "C" {
 #[start]
 pub fn hari_main() {
     init_palette();
-    let screen = Screen{xsize:320, ysize:200};
+    let screen = Screen::new();
 
     boxfill(screen.xsize, Color::DarkLightBlue, 0, 0, screen.xsize - 1, screen.ysize - 29);
     boxfill(screen.xsize, Color::LightGray, 0, screen.ysize - 28, screen.xsize - 1, screen.ysize - 28);
@@ -57,6 +57,16 @@ fn boxfill(xsize: u16, c: Color, x0: u16, y0: u16, x1: u16, y1: u16) {
 struct Screen {
     xsize: u16,
     ysize: u16,
+}
+
+impl Screen {
+    fn new() -> Screen {
+        let screenx_addr = 0x0ff4;
+        let screeny_addr = 0x0ff6;
+        let xsize = unsafe{ *(screenx_addr as *const u16)};
+        let ysize = unsafe{ *(screeny_addr as *const u16)};
+        return Screen{xsize: xsize, ysize: ysize};
+    }
 }
 
 #[derive(Clone, Copy)]
