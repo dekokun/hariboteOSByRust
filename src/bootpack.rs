@@ -53,6 +53,34 @@ fn boxfill(xsize: u16, c: Color, x0: u16, y0: u16, x1: u16, y1: u16) {
         }
     }
 }
+struct BootInfo {
+    cyls: u8,
+    leds: u8,
+    vmode: u8,
+    screenx: u16,
+    screeny: u16,
+    vram: u8
+}
+
+impl BootInfo {
+    fn new() -> BootInfo {
+        // from asmhead.asm
+        let cyls_addr = 0x0ff0;
+        let leds_addr = 0x0ff1;
+        let vmode_addr = 0x0ff2;
+        let screenx_addr = 0x0ff4;
+        let screeny_addr = 0x0ff6;
+        let vram_addr = 0x0ff8;
+        return BootInfo{
+            cyls: unsafe{ *(cyls_addr as *const u8)},
+            leds: unsafe{ *(leds_addr as *const u8)},
+            vmode: unsafe{*(vmode_addr as *const u8)},
+            screenx: unsafe{*(screenx_addr as * const u16)},
+            screeny: unsafe{*(screeny_addr as * const u16)},
+            vram: unsafe{*(vram_addr as * const u8)}
+        }
+    }
+}
 
 struct Screen {
     xsize: u16,
@@ -61,11 +89,8 @@ struct Screen {
 
 impl Screen {
     fn new() -> Screen {
-        let screenx_addr = 0x0ff4;
-        let screeny_addr = 0x0ff6;
-        let xsize = unsafe{ *(screenx_addr as *const u16)};
-        let ysize = unsafe{ *(screeny_addr as *const u16)};
-        return Screen{xsize: xsize, ysize: ysize};
+        let bootinfo = BootInfo::new();
+        return Screen{xsize: bootinfo.screenx, ysize: bootinfo.screeny};
     }
 }
 
