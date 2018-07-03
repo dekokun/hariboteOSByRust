@@ -78,9 +78,9 @@ enum Color {
     DarkLightBlue = 14,
     DarkGray = 15
 }
-
-fn init_palette() {
-    let rgb = [
+impl Color {
+    fn palette() -> [u16; 48] {
+    return [
         0x00,
         0x00,
         0x00, /*  0:黒 */
@@ -130,6 +130,12 @@ fn init_palette() {
         0x84,
         0x84, /* 15:暗い灰色 */
     ];
+
+    }
+}
+
+fn init_palette() {
+    let rgb = Color::palette();
     unsafe {
         let eflags = _io_load_eflags();
         _io_out8(0x03c8, 0);
