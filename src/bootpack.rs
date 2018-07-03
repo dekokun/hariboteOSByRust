@@ -18,29 +18,45 @@ extern "C" {
 #[start]
 pub fn hari_main() {
     init_palette();
-    for i in 0xa0000..0xaffff {
-        let vram: *mut i32 = i as *mut i32;
-        unsafe {
-            *vram = i & 0x0f;
-        }
-    }
-    boxfill(320, Color::DarkGreen, 20, 20, 120, 120);
+    let screen = Screen{xsize:320, ysize:200};
+
+    boxfill(screen.xsize, Color::DarkLightBlue, 0, 0, screen.xsize - 1, screen.ysize - 29);
+    boxfill(screen.xsize, Color::LightGray, 0, screen.ysize - 28, screen.xsize - 1, screen.ysize - 28);
+    boxfill(screen.xsize, Color::White, 0, screen.ysize - 27, screen.xsize - 1, screen.ysize - 27);
+    boxfill(screen.xsize, Color::LightGray, 0, screen.ysize - 26, screen.xsize - 1, screen.ysize - 1);
+
+    boxfill(screen.xsize, Color::White, 3, screen.ysize - 24, 59, screen.ysize - 24);
+    boxfill(screen.xsize, Color::White, 2, screen.ysize - 24, 2, screen.ysize - 4);
+    boxfill(screen.xsize, Color::DarkGray, 3, screen.ysize - 4, 59, screen.ysize - 4);
+    boxfill(screen.xsize, Color::DarkGray, 59, screen.ysize - 23, 59, screen.ysize - 5);
+    boxfill(screen.xsize, Color::Black, 2, screen.ysize - 3, 59, screen.ysize - 3);
+    boxfill(screen.xsize, Color::Black, 60, screen.ysize - 24, 60, screen.ysize - 3);
+
+    boxfill(screen.xsize, Color::DarkGray, screen.xsize - 47, screen.ysize - 24, screen.xsize - 4, screen.ysize - 24);
+    boxfill(screen.xsize, Color::DarkGray, screen.xsize - 47, screen.ysize - 23, screen.xsize - 47, screen.ysize - 4); boxfill(screen.xsize, Color::White, screen.xsize - 47, screen.ysize - 3, screen.xsize - 4, screen.ysize - 3);
+    boxfill(screen.xsize, Color::White, screen.xsize - 3, screen.ysize - 24, screen.xsize - 3, screen.ysize - 3);
+
     unsafe {
         _io_hlt();
     }
 }
 
-fn boxfill(xsize: i32, c: Color, x0: i32, y0: i32, x1: i32, y1: i32) {
+fn boxfill(xsize: u16, c: Color, x0: u16, y0: u16, x1: u16, y1: u16) {
     let vram_start = 0xa0000;
-    for y in y0..y1 {
-        for x in x0..x1 {
-            let offset = y * xsize + x;
+    for y in y0..y1+1 {
+        for x in x0..x1+1 {
+            let offset = (y * xsize + x) as u32;
             let vram = (vram_start + offset) as *mut u8;
             unsafe {
                 *vram = c as u8;
             }
         }
     }
+}
+
+struct Screen {
+    xsize: u16,
+    ysize: u16,
 }
 
 #[derive(Clone, Copy)]
@@ -117,7 +133,7 @@ fn init_palette() {
     unsafe {
         let eflags = _io_load_eflags();
         _io_out8(0x03c8, 0);
-        for i in 0..rgb.len() - 1 {
+        for i in 0..rgb.len() {
             _io_out8(0x03c9, rgb[i] / 4);
         }
         _io_store_eflags(eflags); /* 割り込み許可フラグを元に戻す */
