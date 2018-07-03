@@ -18,6 +18,14 @@ extern "C" {
 #[start]
 pub fn hari_main() {
     init_palette();
+    init_screen();
+
+    unsafe {
+        _io_hlt();
+    }
+}
+
+fn init_screen() {
     let screen = Screen::new();
 
     boxfill(screen.xsize, Color::DarkLightBlue, 0, 0, screen.xsize - 1, screen.ysize - 29);
@@ -36,9 +44,6 @@ pub fn hari_main() {
     boxfill(screen.xsize, Color::DarkGray, screen.xsize - 47, screen.ysize - 23, screen.xsize - 47, screen.ysize - 4); boxfill(screen.xsize, Color::White, screen.xsize - 47, screen.ysize - 3, screen.xsize - 4, screen.ysize - 3);
     boxfill(screen.xsize, Color::White, screen.xsize - 3, screen.ysize - 24, screen.xsize - 3, screen.ysize - 3);
 
-    unsafe {
-        _io_hlt();
-    }
 }
 
 fn boxfill(xsize: u16, c: Color, x0: u16, y0: u16, x1: u16, y1: u16) {
