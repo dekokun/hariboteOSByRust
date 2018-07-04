@@ -26,28 +26,30 @@ pub fn hari_main() {
 }
 
 fn init_screen() {
-    let screen = Screen::new();
+    let bootinfo = BootInfo::new();
+    let screen = Screen::new(bootinfo.screenx, bootinfo.screeny);
 
-    boxfill(screen.xsize, Color::DarkLightBlue, 0, 0, screen.xsize - 1, screen.ysize - 29);
-    boxfill(screen.xsize, Color::LightGray, 0, screen.ysize - 28, screen.xsize - 1, screen.ysize - 28);
-    boxfill(screen.xsize, Color::White, 0, screen.ysize - 27, screen.xsize - 1, screen.ysize - 27);
-    boxfill(screen.xsize, Color::LightGray, 0, screen.ysize - 26, screen.xsize - 1, screen.ysize - 1);
+    boxfill(bootinfo.vram, screen.xsize, Color::DarkLightBlue, 0, 0, screen.xsize - 1, screen.ysize - 29);
+    boxfill(bootinfo.vram, screen.xsize, Color::LightGray, 0, screen.ysize - 28, screen.xsize - 1, screen.ysize - 28);
+    boxfill(bootinfo.vram, screen.xsize, Color::White, 0, screen.ysize - 27, screen.xsize - 1, screen.ysize - 27);
+    boxfill(bootinfo.vram, screen.xsize, Color::LightGray, 0, screen.ysize - 26, screen.xsize - 1, screen.ysize - 1);
 
-    boxfill(screen.xsize, Color::White, 3, screen.ysize - 24, 59, screen.ysize - 24);
-    boxfill(screen.xsize, Color::White, 2, screen.ysize - 24, 2, screen.ysize - 4);
-    boxfill(screen.xsize, Color::DarkGray, 3, screen.ysize - 4, 59, screen.ysize - 4);
-    boxfill(screen.xsize, Color::DarkGray, 59, screen.ysize - 23, 59, screen.ysize - 5);
-    boxfill(screen.xsize, Color::Black, 2, screen.ysize - 3, 59, screen.ysize - 3);
-    boxfill(screen.xsize, Color::Black, 60, screen.ysize - 24, 60, screen.ysize - 3);
+    boxfill(bootinfo.vram, screen.xsize, Color::White, 3, screen.ysize - 24, 59, screen.ysize - 24);
+    boxfill(bootinfo.vram, screen.xsize, Color::White, 2, screen.ysize - 24, 2, screen.ysize - 4);
+    boxfill(bootinfo.vram, screen.xsize, Color::DarkGray, 3, screen.ysize - 4, 59, screen.ysize - 4);
+    boxfill(bootinfo.vram, screen.xsize, Color::DarkGray, 59, screen.ysize - 23, 59, screen.ysize - 5);
+    boxfill(bootinfo.vram, screen.xsize, Color::Black, 2, screen.ysize - 3, 59, screen.ysize - 3);
+    boxfill(bootinfo.vram, screen.xsize, Color::Black, 60, screen.ysize - 24, 60, screen.ysize - 3);
 
-    boxfill(screen.xsize, Color::DarkGray, screen.xsize - 47, screen.ysize - 24, screen.xsize - 4, screen.ysize - 24);
-    boxfill(screen.xsize, Color::DarkGray, screen.xsize - 47, screen.ysize - 23, screen.xsize - 47, screen.ysize - 4); boxfill(screen.xsize, Color::White, screen.xsize - 47, screen.ysize - 3, screen.xsize - 4, screen.ysize - 3);
-    boxfill(screen.xsize, Color::White, screen.xsize - 3, screen.ysize - 24, screen.xsize - 3, screen.ysize - 3);
+    boxfill(bootinfo.vram, screen.xsize, Color::DarkGray, screen.xsize - 47, screen.ysize - 24, screen.xsize - 4, screen.ysize - 24);
+    boxfill(bootinfo.vram, screen.xsize, Color::DarkGray, screen.xsize - 47, screen.ysize - 23, screen.xsize - 47, screen.ysize - 4);
+    boxfill(bootinfo.vram, screen.xsize, Color::White, screen.xsize - 47, screen.ysize - 3, screen.xsize - 4, screen.ysize - 3);
+    boxfill(bootinfo.vram, screen.xsize, Color::White, screen.xsize - 3, screen.ysize - 24, screen.xsize - 3, screen.ysize - 3);
 
 }
 
-fn boxfill(xsize: u16, c: Color, x0: u16, y0: u16, x1: u16, y1: u16) {
-    let vram_start = 0xa0000;
+fn boxfill(vram: u32, xsize: u16, c: Color, x0: u16, y0: u16, x1: u16, y1: u16) {
+    let vram_start = vram;
     for y in y0..y1+1 {
         for x in x0..x1+1 {
             let offset = (y * xsize + x) as u32;
@@ -64,7 +66,7 @@ struct BootInfo {
     vmode: u8,
     screenx: u16,
     screeny: u16,
-    vram: u8
+    vram: u32
 }
 
 impl BootInfo {
@@ -82,7 +84,7 @@ impl BootInfo {
             vmode: unsafe{*(vmode_addr as *const u8)},
             screenx: unsafe{*(screenx_addr as * const u16)},
             screeny: unsafe{*(screeny_addr as * const u16)},
-            vram: unsafe{*(vram_addr as * const u8)}
+            vram: unsafe{*(vram_addr as * const u32)}
         }
     }
 }
@@ -93,9 +95,8 @@ struct Screen {
 }
 
 impl Screen {
-    fn new() -> Screen {
-        let bootinfo = BootInfo::new();
-        return Screen{xsize: bootinfo.screenx, ysize: bootinfo.screeny};
+    fn new(xsize: u16, ysize: u16) -> Screen {
+        return Screen{xsize: xsize, ysize: ysize};
     }
 }
 
