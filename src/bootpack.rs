@@ -17,16 +17,24 @@ extern "C" {
 #[no_mangle]
 #[start]
 pub fn hari_main() {
+    let bootinfo = BootInfo::new();
     init_palette();
-    init_screen();
+    init_screen(&bootinfo);
+    let font_a: [u8; 16] = [
+		0x00, 0x18, 0x18, 0x18, 0x18, 0x24, 0x24, 0x24,
+		0x24, 0x7e, 0x42, 0x42, 0x42, 0xe7, 0x00, 0x00
+    ];
+
+	init_palette();
+	put_font(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, font_a);
+
 
     unsafe {
         _io_hlt();
     }
 }
 
-fn init_screen() {
-    let bootinfo = BootInfo::new();
+fn init_screen(bootinfo: &BootInfo) {
     let screen = Screen::new(bootinfo.screenx, bootinfo.screeny);
 
     boxfill(bootinfo.vram, screen.xsize, Color::DarkLightBlue, 0, 0, screen.xsize - 1, screen.ysize - 29);
@@ -172,6 +180,20 @@ impl Color {
         0x84, /* 15:暗い灰色 */
     ];
 
+    }
+}
+
+fn put_font(vram: u32, xsize: u16, x: u16, y: u16, color: Color, font: [u8; 16]) {
+    for (i, f) in font.iter().enumerate() {
+        let p = vram + ((y + i as u16) * xsize + x) as u32;
+        if (f & 0x80) != 0 { unsafe { *((p + 0) as *mut u8) = color as u8; } }
+        if (f & 0x40) != 0 { unsafe { *((p + 1) as *mut u8) = color as u8; } }
+        if (f & 0x20) != 0 { unsafe { *((p + 2) as *mut u8) = color as u8; } }
+        if (f & 0x10) != 0 { unsafe { *((p + 3) as *mut u8) = color as u8; } }
+        if (f & 0x08) != 0 { unsafe { *((p + 4) as *mut u8) = color as u8; } }
+        if (f & 0x04) != 0 { unsafe { *((p + 5) as *mut u8) = color as u8; } }
+        if (f & 0x02) != 0 { unsafe { *((p + 6) as *mut u8) = color as u8; } }
+        if (f & 0x01) != 0 { unsafe { *((p + 7) as *mut u8) = color as u8; } }
     }
 }
 
