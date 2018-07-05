@@ -24,13 +24,17 @@ $(TARGET): $(BUILDDIR)/ipl10.bin $(BUILDDIR)/haribote.sys
 	mformat -f 1440 -C -B $< -i $(TARGET)
 	mcopy $(filter-out $<,$^) -i $(TARGET) ::
 
+$(SRCDIR)/hankaku.rs: hankaku.rb hankaku.txt
+	ruby hankaku.rb hankaku.txt > $@
+
+
 $(BUILDDIR)/haribote.sys: $(BUILDDIR)/asmhead.bin $(BUILDDIR)/bootpack.bin
 	cat $^ > $@
 
 $(BUILDDIR)/osfunc.o: osfunc.asm Makefile
 	nasm -f elf32 $(SRCDIR)/osfunc.asm -o $(BUILDDIR)/osfunc.o -l $(BUILDDIR)/osfunc.lst
 
-target/i686-unknown-linux-gnu/debug/libdekoos.a: bootpack.rs Makefile
+target/i686-unknown-linux-gnu/debug/libdekoos.a: bootpack.rs hankaku.rs Makefile
 	RUSTFLAGS='-C relocation-model=dynamic-no-pic' RUST_TARGET_PATH=$(PWD) rustup run nightly `which xargo` build -v --target=i686-unknown-linux-gnu --manifest-path Cargo.toml
 
 $(BUILDDIR)/bootpack.bin: target/i686-unknown-linux-gnu/debug/libdekoos.a osfunc.o

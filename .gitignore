@@ -11,3 +11,5 @@ Cargo.lock
 
 build/
 haribote.img
+
+src/hankaku.rs

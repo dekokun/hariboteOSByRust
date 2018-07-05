@@ -4,7 +4,9 @@
 #![feature(asm)]
 
 use core::panic::PanicInfo;
+mod hankaku;
 
+#[link(name = "hankaku")]
 extern "C" {
     #[cfg(any(target_arch = "x86"))]
     fn _io_cli();
@@ -27,6 +29,7 @@ pub fn hari_main() {
 
 	init_palette();
 	put_font(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, font_a);
+	put_font(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, hankaku::HANKAKU[0x42]);
 
 
     unsafe {
