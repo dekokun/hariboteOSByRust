@@ -25,7 +25,7 @@ $(TARGET): $(BUILDDIR)/ipl10.bin $(BUILDDIR)/haribote.sys
 	mcopy $(filter-out $<,$^) -i $(TARGET) ::
 
 $(SRCDIR)/hankaku.rs: hankaku.rb hankaku.txt
-	ruby hankaku.rb hankaku.txt > $@
+	./hankaku.rb hankaku.txt > $@
 
 
 $(BUILDDIR)/haribote.sys: $(BUILDDIR)/asmhead.bin $(BUILDDIR)/bootpack.bin
