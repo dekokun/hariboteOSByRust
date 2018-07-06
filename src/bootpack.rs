@@ -28,8 +28,12 @@ pub fn hari_main() {
     ];
 
 	init_palette();
-	put_font(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, font_a);
-	put_font(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, hankaku::HANKAKU[0x42]);
+	put_font(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, hankaku::HANKAKU[0x44]);
+	put_font(bootinfo.vram, bootinfo.screenx, 20, 10, Color::Black, hankaku::HANKAKU[0x45]);
+	put_font(bootinfo.vram, bootinfo.screenx, 30, 10, Color::Black, hankaku::HANKAKU[0x4b]);
+	put_font(bootinfo.vram, bootinfo.screenx, 40, 10, Color::Black, hankaku::HANKAKU[0x4f]);
+	put_font(bootinfo.vram, bootinfo.screenx, 50, 10, Color::Black, hankaku::HANKAKU[0x4f]);
+	put_font(bootinfo.vram, bootinfo.screenx, 60, 10, Color::Black, hankaku::HANKAKU[0x53]);
 
 
     unsafe {
