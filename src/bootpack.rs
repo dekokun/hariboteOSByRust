@@ -28,13 +28,8 @@ pub fn hari_main() {
     ];
 
 	init_palette();
-	put_font(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, hankaku::HANKAKU[0x44]);
-	put_font(bootinfo.vram, bootinfo.screenx, 20, 10, Color::Black, hankaku::HANKAKU[0x45]);
-	put_font(bootinfo.vram, bootinfo.screenx, 30, 10, Color::Black, hankaku::HANKAKU[0x4b]);
-	put_font(bootinfo.vram, bootinfo.screenx, 40, 10, Color::Black, hankaku::HANKAKU[0x4f]);
-	put_font(bootinfo.vram, bootinfo.screenx, 50, 10, Color::Black, hankaku::HANKAKU[0x4f]);
-	put_font(bootinfo.vram, bootinfo.screenx, 60, 10, Color::Black, hankaku::HANKAKU[0x53]);
-
+	put_fonts(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, "DEKOOS");
+	put_fonts(bootinfo.vram, bootinfo.screenx, 9, 9, Color::White, "DEKOOS");
 
     unsafe {
         _io_hlt();
@@ -190,6 +185,11 @@ impl Color {
     }
 }
 
+fn put_fonts(vram: u32, xsize: u16, x: u16, y: u16, color: Color, string: &str) {
+    for (i, c) in string.chars().enumerate() {
+        put_font(vram, xsize, x + (i * 8) as u16, y, color, hankaku::HANKAKU[c as usize])
+    }
+}
 fn put_font(vram: u32, xsize: u16, x: u16, y: u16, color: Color, font: [u8; 16]) {
     for (i, f) in font.iter().enumerate() {
         let p = vram + ((y + i as u16) * xsize + x) as u32;
