@@ -39,7 +39,7 @@ pub fn hari_main() {
 fn init_screen(bootinfo: &BootInfo) {
     let screen = Screen::new(bootinfo.screenx, bootinfo.screeny);
 
-    boxfill(bootinfo.vram, screen.xsize, Color::DarkLightBlue, 0, 0, screen.xsize - 1, screen.ysize - 29);
+    boxfill(bootinfo.vram, screen.xsize, Color::DarkCyan, 0, 0, screen.xsize - 1, screen.ysize - 29);
     boxfill(bootinfo.vram, screen.xsize, Color::LightGray, 0, screen.ysize - 28, screen.xsize - 1, screen.ysize - 28);
     boxfill(bootinfo.vram, screen.xsize, Color::White, 0, screen.ysize - 27, screen.xsize - 1, screen.ysize - 27);
     boxfill(bootinfo.vram, screen.xsize, Color::LightGray, 0, screen.ysize - 26, screen.xsize - 1, screen.ysize - 1);
@@ -118,7 +118,7 @@ enum Color {
     LightYellow = 3,
     LightBlue = 4,
     LightPurple = 5,
-    LightLightBlue =6,
+    LightCyan = 6,
     White = 7,
     LightGray = 8,
     DarkRed = 9,
@@ -126,7 +126,7 @@ enum Color {
     DarkYellow = 11,
     DarkBlue = 12,
     DarkPurple = 13,
-    DarkLightBlue = 14,
+    DarkCyan = 14,
     DarkGray = 15
 }
 impl Color {
