@@ -67,8 +67,11 @@ fn boxfill(vram: u32, xsize: u16, c: Color, x0: u16, y0: u16, x1: u16, y1: u16) 
     }
 }
 struct BootInfo {
+    #[allow(dead_code)]
     cyls: u8,
+    #[allow(dead_code)]
     leds: u8,
+    #[allow(dead_code)]
     vmode: u8,
     screenx: u16,
     screeny: u16,
@@ -109,18 +112,29 @@ impl Screen {
 #[derive(Clone, Copy)]
 enum Color {
     Black = 0,
+    #[allow(dead_code)]
     LightRed = 1,
+    #[allow(dead_code)]
     LightGreen = 2,
+    #[allow(dead_code)]
     LightYellow = 3,
+    #[allow(dead_code)]
     LightBlue = 4,
+    #[allow(dead_code)]
     LightPurple = 5,
+    #[allow(dead_code)]
     LightCyan = 6,
     White = 7,
     LightGray = 8,
+    #[allow(dead_code)]
     DarkRed = 9,
+    #[allow(dead_code)]
     DarkGreen = 10,
+    #[allow(dead_code)]
     DarkYellow = 11,
+    #[allow(dead_code)]
     DarkBlue = 12,
+    #[allow(dead_code)]
     DarkPurple = 13,
     DarkCyan = 14,
     DarkGray = 15
