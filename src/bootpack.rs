@@ -22,10 +22,6 @@ pub fn hari_main() {
     let bootinfo = BootInfo::new();
     init_palette();
     init_screen(&bootinfo);
-    let font_a: [u8; 16] = [
-		0x00, 0x18, 0x18, 0x18, 0x18, 0x24, 0x24, 0x24,
-		0x24, 0x7e, 0x42, 0x42, 0x42, 0xe7, 0x00, 0x00
-    ];
 
 	init_palette();
 	put_fonts(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, "DEKOOS");
