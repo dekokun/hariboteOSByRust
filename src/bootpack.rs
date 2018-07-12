@@ -4,6 +4,7 @@
 #![feature(asm)]
 
 use core::panic::PanicInfo;
+use core::ptr;
 mod hankaku;
 
 #[link(name = "hankaku")]
@@ -66,6 +67,8 @@ fn boxfill(vram: u32, xsize: u16, c: Color, x0: u16, y0: u16, x1: u16, y1: u16) 
         }
     }
 }
+
+#[repr(C)]
 struct BootInfo {
     #[allow(dead_code)]
     cyls: u8,
@@ -80,21 +83,7 @@ struct BootInfo {
 
 impl BootInfo {
     fn new() -> BootInfo {
-        // from asmhead.asm
-        let cyls_addr = 0x0ff0;
-        let leds_addr = 0x0ff1;
-        let vmode_addr = 0x0ff2;
-        let screenx_addr = 0x0ff4;
-        let screeny_addr = 0x0ff6;
-        let vram_addr = 0x0ff8;
-        return BootInfo{
-            cyls: unsafe{ *(cyls_addr as *const u8)},
-            leds: unsafe{ *(leds_addr as *const u8)},
-            vmode: unsafe{*(vmode_addr as *const u8)},
-            screenx: unsafe{*(screenx_addr as * const u16)},
-            screeny: unsafe{*(screeny_addr as * const u16)},
-            vram: unsafe{*(vram_addr as * const u32)}
-        }
+        return unsafe{ptr::read(0x0ff0 as *const BootInfo)};
     }
 }
 
