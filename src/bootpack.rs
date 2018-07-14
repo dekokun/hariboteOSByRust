@@ -76,6 +76,7 @@ struct BootInfo {
     leds: u8,
     #[allow(dead_code)]
     vmode: u8,
+    padding: u8,
     screenx: u16,
     screeny: u16,
     vram: u32
