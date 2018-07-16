@@ -234,6 +234,7 @@ pub struct Writer {
     color_code: Color,
     screen_width: u16,
     vram: u32,
+    column_position: u16,
 }
 
 impl Writer {
@@ -243,16 +244,18 @@ impl Writer {
 impl fmt::Write for Writer {
     #[allow(unused_must_use)]
     fn write_str(&mut self, s: &str) -> fmt::Result {
-        put_fonts(self.vram, self.screen_width, 20, 20, self.color_code, s);
+        put_fonts(self.vram, self.screen_width, 20 + self.column_position * 8, 20, self.color_code, s);
+        self.column_position += s.len() as u16;
         Ok(())
     }
 }
 pub fn print_something() {
     let bootinfo = BootInfo::new();
     let mut writer = Writer {
+        column_position: 0,
         screen_width: bootinfo.screenx,
         vram: bootinfo.vram,
         color_code: Color::Black,
     };
-    write!(writer, "{}", 2);
+    write!(writer, "The numbers are {} and {}", 4, 3);
 }
