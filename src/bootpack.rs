@@ -254,5 +254,5 @@ pub fn print_something() {
         vram: bootinfo.vram,
         color_code: Color::Black,
     };
-    write!(writer, "The numbers are {} and {}", 42, 30);
+    write!(writer, "{}", 2);
 }
