@@ -2,9 +2,12 @@
 #![feature(start)]
 #![no_std]
 #![feature(asm)]
+#![feature(ptr_internals)]
 
 use core::panic::PanicInfo;
 use core::ptr;
+use core::fmt;
+use core::fmt::Write;
 mod hankaku;
 
 #[link(name = "hankaku")]
@@ -27,6 +30,7 @@ pub fn hari_main() {
 	init_palette();
 	put_fonts(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, "DEKOOS");
 	put_fonts(bootinfo.vram, bootinfo.screenx, 9, 9, Color::White, "DEKOOS");
+    print_something();
 
     unsafe {
         _io_hlt();
@@ -100,6 +104,7 @@ impl Screen {
 }
 
 #[derive(Clone, Copy)]
+#[repr(u8)]
 enum Color {
     Black = 0,
     #[allow(dead_code)]
@@ -223,4 +228,31 @@ extern "C" fn eh_personality() {}
 #[no_mangle]
 pub extern "C" fn panic_impl(_: &PanicInfo) -> ! {
     loop {}
+}
+
+pub struct Writer {
+    color_code: Color,
+    screen_width: u16,
+    vram: u32,
+}
+
+impl Writer {
+    #[allow(dead_code)]
+    fn new_line(&mut self) {/* TODO */}
+}
+impl fmt::Write for Writer {
+    #[allow(unused_must_use)]
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        put_fonts(self.vram, self.screen_width, 20, 20, self.color_code, s);
+        Ok(())
+    }
+}
+pub fn print_something() {
+    let bootinfo = BootInfo::new();
+    let mut writer = Writer {
+        screen_width: bootinfo.screenx,
+        vram: bootinfo.vram,
+        color_code: Color::Black,
+    };
+    write!(writer, "The numbers are {} and {}", 42, 30);
 }
