@@ -235,17 +235,34 @@ pub struct Writer {
     screen_width: u16,
     vram: u32,
     column_position: u16,
+    row_position: u16,
 }
 
 impl Writer {
     #[allow(dead_code)]
-    fn new_line(&mut self) {/* TODO */}
+    fn new_line(&mut self) {
+        self.column_position = 0;
+        self.row_position += 1;
+    }
+    fn write_char(&mut self, c: char) {
+        if self.screen_width < 8 * (self.column_position + 1) {
+            self.new_line();
+        }
+        match c {
+            '\n' => self.new_line(),
+            c => {
+                put_font(self.vram, self.screen_width, self.column_position * 8, self.row_position * 16, self.color_code, hankaku::HANKAKU[c as usize]);
+                self.column_position += 1;
+            }
+        }
+    }
 }
 impl fmt::Write for Writer {
     #[allow(unused_must_use)]
     fn write_str(&mut self, s: &str) -> fmt::Result {
-        put_fonts(self.vram, self.screen_width, 20 + self.column_position * 8, 20, self.color_code, s);
-        self.column_position += s.len() as u16;
+        for c in s.chars() {
+            self.write_char(c);
+        }
         Ok(())
     }
 }
@@ -256,6 +273,7 @@ pub fn print_something() {
         screen_width: bootinfo.screenx,
         vram: bootinfo.vram,
         color_code: Color::Black,
+        row_position: 0,
     };
-    write!(writer, "The numbers are {} and {}", 4, 3);
+    let _ = writeln!(writer, "a                                      a\nhogefuga\ngegege");
 }
