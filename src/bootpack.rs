@@ -245,12 +245,12 @@ impl Writer {
         self.row_position += 1;
     }
     fn write_char(&mut self, c: char) {
-        if self.screen_width < 8 * (self.column_position + 1) {
-            self.new_line();
-        }
         match c {
             '\n' => self.new_line(),
             c => {
+                if self.screen_width < 8 * (self.column_position + 1) {
+                    self.new_line();
+                }
                 put_font(self.vram, self.screen_width, self.column_position * 8, self.row_position * 16, self.color_code, hankaku::HANKAKU[c as usize]);
                 self.column_position += 1;
             }
