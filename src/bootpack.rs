@@ -275,5 +275,7 @@ pub fn print_something() {
         color_code: Color::Black,
         row_position: 0,
     };
-    writeln!(writer, "a                                      a\nhogefuga\ngegege").unwrap();
+    writeln!(writer, "{} {} {} {} ", 1, 10, 100, 1000).unwrap();
+    writeln!(writer, "{} {} {} {} ", 1.0, 10.0, 100.0, 1000.0).unwrap();
+    writeln!(writer, "{:?} {} ", (1/3) as f64, (1/3) as f64).unwrap();
 }
