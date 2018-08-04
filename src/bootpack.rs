@@ -275,5 +275,5 @@ pub fn print_something() {
         color_code: Color::Black,
         row_position: 0,
     };
-    let _ = writeln!(writer, "a                                      a\nhogefuga\ngegege");
+    writeln!(writer, "a                                      a\nhogefuga\ngegege").unwrap();
 }
