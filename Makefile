@@ -36,8 +36,7 @@ $(BUILDDIR)/osfunc.o: osfunc.asm Makefile
 	nasm -f elf32 $(SRCDIR)/osfunc.asm -o $(BUILDDIR)/osfunc.o -l $(BUILDDIR)/osfunc.lst
 
 target/$(TARGET_TRIPLE)/debug/libdekoos.a: bootpack.rs hankaku.rs Cargo.toml Makefile
-	# RUSTFLAGS='-C relocation-model=dynamic-no-pic -Z external-macro-backtrace' RUST_TARGET_PATH=$(PWD) rustup run nightly `which xargo` build -v --target=$(TARGET_TRIPLE) --manifest-path Cargo.toml
-	RUSTFLAGS='-C relocation-model=dynamic-no-pic -Z external-macro-backtrace' RUST_TARGET_PATH=$(PWD) rustup run nightly-2018-06-29 `which xargo` build -v --target=$(TARGET_TRIPLE) --manifest-path Cargo.toml
+	RUSTFLAGS='-C relocation-model=dynamic-no-pic -Z external-macro-backtrace' RUST_TARGET_PATH=$(PWD) rustup run nightly `which xargo` build -v --target=$(TARGET_TRIPLE) --manifest-path Cargo.toml
 
 $(BUILDDIR)/bootpack.bin: target/$(TARGET_TRIPLE)/debug/libdekoos.a osfunc.o
 	i686-unknown-linux-gnu-ld -v -nostdlib -Tdata=0x00310000 target/$(TARGET_TRIPLE)/debug/libdekoos.a $(BUILDDIR)/osfunc.o -T $(SRCDIR)/kernel.ld -o $@
