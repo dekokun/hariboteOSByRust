@@ -46,12 +46,7 @@ $(BUILDDIR)/%.bin: %.asm
 	nasm $< -o $@ -l $(BUILDDIR)/$*.lst
 
 run: install
-	VBoxManage unregistervm $(OSNAME) --delete
-	VBoxManage createvm --name $(OSNAME) --ostype Other --register
-	VBoxManage modifyvm  $(OSNAME) --ostype Other --memory 32
-	VBoxManage storagectl $(OSNAME) --name Floppy --add floppy
-	VBoxManage storageattach $(OSNAME) --storagectl Floppy --device 0 --medium $(TARGET)
-	VBoxManage startvm $(OSNAME)
+	qemu-system-i386 -L . -m 32 -localtime -vga std -fda haribote.img -serial mon:stdio
 
 clean:
 	$(RM) $(TARGET)
