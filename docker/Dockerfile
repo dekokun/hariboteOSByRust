@@ -31,7 +31,7 @@ FROM rust:1.25.0
         chmod 0440 /etc/sudoers.d/developer && \
         chown ${uid}:${gid} -R /home/developer
 
-    # 以降はユーザdeveloperとして実行   
+    # 以降はユーザdeveloperとして実行
     USER developer
     ENV HOME /home/developer
     WORKDIR /home/developer
@@ -53,8 +53,8 @@ FROM rust:1.25.0
         sudo make -j8 install
 
     # rustのデフォルトツールチェインとクロスコンパイル環境の設定
-    RUN rustup default nightly && \
-        rustup target add i686-unknown-linux-gnu
+    RUN rustup target add i686-unknown-linux-gnu
+    RUN rustup default nightly
     RUN cargo install xargo
     RUN rustup component add rust-src
 
