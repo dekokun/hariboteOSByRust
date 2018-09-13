@@ -275,7 +275,17 @@ pub fn print_something() {
         color_code: Color::Black,
         row_position: 0,
     };
-    writeln!(writer, "{} {} {} {} ", 1, 10, 100, 1000).unwrap();
-    writeln!(writer, "{} {} {} {} ", 1.0, 10.0, 100.0, 1000.0).unwrap();
-    writeln!(writer, "{:?} {} ", (1/3) as f64, (1/3) as f64).unwrap();
+
+    writeln!(writer, "{}, {}, {}, {} ", 1, 10, 100, 1000).unwrap();
+    writeln!(writer, "{}, {}, {}, {} ", 1, 17, 102, 1002).unwrap();
+    writeln!(writer, "{}, {}, {}, {} ", 1, 1, 17, 100).unwrap();
+    writeln!(writer, "{}, {}, {}, {} ", 1, 2, 3, 4).unwrap();
+    writeln!(writer, "{}, {}, {}, {} ", 5, 6, 7, 8).unwrap();
+    writeln!(writer, "{}, {}, {}, {} ", 9, 10, 11, 12).unwrap();
+    writeln!(writer, "{}, {}, {}, {} ", 1.12, 10.13, 100.16, 1000.19).unwrap();
+    writeln!(writer, "{:?}, {} ", 1.0/3.0, 1/3).unwrap();
+    writeln!(writer, "{:?}, {} ", 4.0/3.0, 4/3).unwrap();
+    writeln!(writer, "{:?}, {} ", 100.0/3.0, 4/3).unwrap();
+    writeln!(writer, "........").unwrap();
+    writeln!(writer, "{}", "........").unwrap();
 }
