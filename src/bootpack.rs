@@ -10,6 +10,14 @@ use core::fmt;
 use core::fmt::Write;
 mod hankaku;
 
+extern crate uart_16550;
+extern crate spin;
+#[macro_use]
+extern crate lazy_static;
+#[macro_use]
+mod serial;
+
+
 #[link(name = "hankaku")]
 extern "C" {
     #[cfg(any(target_arch = "x86"))]
@@ -31,6 +39,7 @@ pub fn hari_main() {
 	put_fonts(bootinfo.vram, bootinfo.screenx, 10, 10, Color::Black, "DEKOOS");
 	put_fonts(bootinfo.vram, bootinfo.screenx, 9, 9, Color::White, "DEKOOS");
     print_something();
+    // serial_println!("Hello Host{}", "!");
 
     unsafe {
         _io_hlt();
